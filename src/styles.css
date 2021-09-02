@@ -104,3 +104,24 @@ p {
 .material-icons {
   margin-right: 10px;
 }
+
+#btn-back-to-top {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: rgb(248, 186, 70);
+  color: white;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
+#btn-back-to-top:hover {
+  background-color: rgb(247, 203, 122);
+}
