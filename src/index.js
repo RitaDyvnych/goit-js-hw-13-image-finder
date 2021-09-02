@@ -1,27 +1,34 @@
 import './sass/main.scss';
 import { error, defaultModules } from '../node_modules/@pnotify/core/dist/PNotify.js';
 import '@pnotify/core/dist/BrightTheme.css';
-import debounce from 'lodash/debounce';
 import ImagesApiService from './apiService';
 import cardTpl from './templates/card.hbs';
-import * as basicLightbox from 'basiclightbox';
-import "basiclightbox/dist/basicLightbox.min.css";
+import LoadMoreBtn from './load-more-btn';
+// import * as basicLightbox from 'basiclightbox';
+// import "basiclightbox/dist/basicLightbox.min.css";
 
 
 const refs = {
 
     form: document.querySelector('.search-form'),
-    searchInput: document.querySelector('.js-input'),
     output: document.querySelector('.js-output'),
-    btnLoad: document.querySelector('.btn')
 }
-const fetchImg = new ImagesApiService();
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '[data-action="load-more"]',
+  hidden: true,
+});
+
+
+const imagesApiService = new ImagesApiService();
 refs.form.addEventListener('submit', onSearch);
+loadMoreBtn.refs.button.addEventListener('click', fetchImage);
 
 function onSearch(e) {
     e.preventDefault();
 
-    if (refs.form.elements.query.value === "") {
+    imagesApiService.query = e.currentTarget.elements.query.value;
+
+    if (imagesApiService.query === "") {
         error(
             {
                 delay: 2000,
@@ -30,12 +37,11 @@ function onSearch(e) {
             })
         return
     };
-    refs.output.innerHTML = "";
 
-    fetchImg.query = refs.form.elements.query.value;
-    fetchImg.fetchImages().then(result => { createMarkup(result) })
-        .catch(error => { console.log(error) });
-    // refs.searchInput = "";
+    loadMoreBtn.show();
+    imagesApiService.resetPage();  
+    clearContainer();
+    fetchImage();
     
 }
 
@@ -51,13 +57,24 @@ function createMarkup(result) {
         return
     }
     refs.output.insertAdjacentHTML('beforeend', cardTpl(result.hits));
-    refs.btnLoad.classList.remove('is-hidden');
+    window.scrollTo({
+                top: document.documentElement.offsetHeight,
+                behavior: 'smooth',
+    });
     
 }
 
-function onBtnLoadClick() {
-    refs.form.scrollIntoView({
-    behavior: 'smooth',
-    block: 'end',
+
+function clearContainer() {
+    refs.output.innerHTML = '';
+}
+
+function fetchImage() {
+    loadMoreBtn.disable();
+    imagesApiService.fetchImages().then(result => {
+        imagesApiService.incrementPage();
+        loadMoreBtn.enable();
+        createMarkup(result); 
     });
+    
 }

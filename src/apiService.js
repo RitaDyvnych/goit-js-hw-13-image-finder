@@ -1,11 +1,9 @@
 export default class ImagesApiService {
     constructor() {
         this.searchQuery = '';
-        this.page = 0;
+        this.page = 1;
     }
     fetchImages() {
-        this.page += 1;
-
         const BASE_URL = 'https://pixabay.com/api/';
         const KEY = '23189460-aa79835af7cd31cf0c37fbc18';
         const per_page = 12;
@@ -14,6 +12,12 @@ export default class ImagesApiService {
         return fetch(url)
             .then(response => response.json());
 
+    }
+    incrementPage() {
+        this.page += 1;
+    }
+    resetPage() {
+       this.page = 1; 
     }
     get query() {
         return this.searchQuery;
