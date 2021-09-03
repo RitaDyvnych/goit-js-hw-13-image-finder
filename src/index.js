@@ -1,9 +1,9 @@
 import './sass/main.scss';
 import { error, defaultModules } from '../node_modules/@pnotify/core/dist/PNotify.js';
 import '@pnotify/core/dist/BrightTheme.css';
-import ImagesApiService from './apiService';
+import ImagesApiService from './js/apiService';
 import cardTpl from './templates/card.hbs';
-import LoadMoreBtn from './load-more-btn';
+import LoadMoreBtn from './js/load-more-btn';
 // import * as basicLightbox from 'basiclightbox';
 // import "basiclightbox/dist/basicLightbox.min.css";
 
