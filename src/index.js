@@ -38,11 +38,10 @@ function onSearch(e) {
         return
     };
 
-    loadMoreBtn.show();
     imagesApiService.resetPage();  
     clearContainer();
     fetchImage();
-    
+  
 }
 
 function createMarkup(result) {
@@ -53,14 +52,14 @@ function createMarkup(result) {
                 delay: 2000,
                 text: "Not found",
                 maxOpen: 1,
-            })
+          })
+        loadMoreBtn.hide();
         return
     }
+  
+    loadMoreBtn.show();
     refs.output.insertAdjacentHTML('beforeend', cardTpl(result.hits));
-    window.scrollTo({
-                top: document.documentElement.offsetHeight,
-                behavior: 'smooth',
-    });
+    setTimeout(() => onPageScroll(), 1000);
     
 }
 
@@ -70,13 +69,22 @@ function clearContainer() {
 }
 
 function fetchImage() {
+  
     loadMoreBtn.disable();
     imagesApiService.fetchImages().then(result => {
-        imagesApiService.incrementPage();
+      imagesApiService.incrementPage();
+        
         loadMoreBtn.enable();
         createMarkup(result); 
     });
     
+}
+
+function onPageScroll() {
+  window.scrollTo({
+                top: document.documentElement.offsetHeight,
+                behavior: 'smooth',
+    });
 }
 
 // back to top button
